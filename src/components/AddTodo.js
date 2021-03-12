@@ -30,11 +30,12 @@ export const AddTodo = () => {
       <Grid container>
         <Grid xs={10} md={11} item style={{ paddingRight: 16 }}>
           <TextField
-            placeholder="Add Todo here"
-            value={inputValue}
-            onChange={changeInput}
-            onKeyPress={(event) => keyInput(event, onAddTodo)}
             fullWidth
+            value={inputValue}
+            disabled={isLoading}
+            onChange={changeInput}
+            placeholder="Add Todo here"
+            onKeyPress={(event) => keyInput(event, onAddTodo)}
           />
         </Grid>
         <Grid xs={2} md={1} item>

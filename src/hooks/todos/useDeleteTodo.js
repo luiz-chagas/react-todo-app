@@ -1,3 +1,4 @@
+import { propEq, reject } from "ramda";
 import { useMutation, useQueryClient } from "react-query";
 
 export const useDeleteTodo = () => {
@@ -9,6 +10,15 @@ export const useDeleteTodo = () => {
     });
 
   return useMutation(deleteTodo, {
+    onMutate: (id) => {
+      const currentTodos = queryClient.getQueryData("todos") ?? [];
+      // @ts-ignore
+      queryClient.setQueryData("todos", reject(propEq("id", id), currentTodos));
+      return currentTodos;
+    },
+    onError: (error, todo, context) => {
+      queryClient.setQueryData("todos", context);
+    },
     onSuccess: () => {
       queryClient.invalidateQueries("todos");
     },

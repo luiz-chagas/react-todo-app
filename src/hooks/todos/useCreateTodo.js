@@ -1,3 +1,4 @@
+import { append } from "ramda";
 import { useMutation, useQueryClient } from "react-query";
 
 export const useCreateTodo = () => {
@@ -10,6 +11,15 @@ export const useCreateTodo = () => {
     });
 
   return useMutation(createTodo, {
+    onMutate: (todo) => {
+      const currentTodos = queryClient.getQueryData("todos") ?? [];
+      // @ts-ignore
+      queryClient.setQueryData("todos", append(todo, currentTodos));
+      return currentTodos;
+    },
+    onError: (error, todo, context) => {
+      queryClient.setQueryData("todos", context);
+    },
     onSuccess: () => {
       queryClient.invalidateQueries("todos");
     },
